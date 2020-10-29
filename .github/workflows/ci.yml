@@ -71,4 +71,4 @@ jobs:
       uses: okteto/push@master
       with:
         namespace: danxiaonuo
-        name: subc-okteto
+        name: subc
