@@ -58,9 +58,6 @@ jobs:
       uses: okteto/namespace@master
       with:
         name: danxiaonuo
-
-    - name: "销毁 stack"
-      uses: okteto/destroy-stack@master 
         
     - name: "创建 stack"
       uses: okteto/deploy-stack@master
