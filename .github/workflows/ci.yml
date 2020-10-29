@@ -63,9 +63,3 @@ jobs:
       uses: okteto/deploy-stack@master
       with:
         build: "true"
-        
-    - name: "上传至okteto"
-      uses: okteto/push@master
-      with:
-        namespace: danxiaonuo
-        name: subc
