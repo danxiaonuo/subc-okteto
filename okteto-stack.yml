@@ -1,0 +1,23 @@
+name: subc
+services:
+  sub:
+    public: true
+    image: okteto.dev/sub
+    build: sub
+    replicas: 1
+    ports:
+      - 25500
+    resources:
+      cpu: 100m
+      memory: 128Mi
+      
+  suc:
+    public: true
+    image: okteto.dev/suc
+    build: suc
+    replicas: 1
+    ports:
+      - 26600
+    resources:
+      cpu: 100m
+      memory: 128Mi 
