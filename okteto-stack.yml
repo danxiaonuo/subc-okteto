@@ -8,8 +8,8 @@ services:
     ports:
       - 25500
     resources:
-      cpu: 100m
-      memory: 300Mi
+      cpu: 500m
+      memory: 600Mi
       
   suc:
     public: true
