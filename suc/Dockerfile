@@ -94,7 +94,7 @@ LABEL maintainer="danxiaonuo <danxiaonuo@danxiaonuo.me>" \
       org.label-schema.url="https://github.com/$DOCKER_IMAGE" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/$DOCKER_IMAGE" \
-	  versions.dumb-init=${DUMBINIT_VERSION}
+      versions.dumb-init=${DUMBINIT_VERSION}
 
 
 # 工作目录
