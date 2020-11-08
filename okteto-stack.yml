@@ -9,7 +9,7 @@ services:
       - 25500
     resources:
       cpu: 100m
-      memory: 128Mi
+      memory: 300Mi
       
   suc:
     public: true
@@ -20,4 +20,4 @@ services:
       - 26600
     resources:
       cpu: 100m
-      memory: 128Mi 
+      memory: 300Mi 
