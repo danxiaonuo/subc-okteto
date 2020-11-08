@@ -94,14 +94,14 @@ LABEL maintainer="danxiaonuo <danxiaonuo@danxiaonuo.me>" \
       org.label-schema.url="https://github.com/$DOCKER_IMAGE" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/$DOCKER_IMAGE" \
-      versions.dumb-init=${DUMBINIT_VERSION}
+	  versions.dumb-init=${DUMBINIT_VERSION}
 
 
 # 工作目录
 WORKDIR /www
 
 # 拷贝资源文件
-COPY --from=build /app/dist /www/dist
+COPY --from=build /app/dist /www
 COPY conf/sub-web/vhost/default.conf /data/nginx/conf/vhost/default.conf
 
 # 容器信号处理
