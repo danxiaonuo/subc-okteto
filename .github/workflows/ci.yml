@@ -9,32 +9,27 @@
 # 编译的名称
 name: 自动部署okteto
 
+
+# 设置触发条件
 on:
-  repository_dispatch:
-
-# 编辑文件触发开始编译
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - '.github/workflows/ci.yml'
-
-
-# release发布触发开始编译
-#  release:
-#    types: published
-
-
-# 定时触发开始编译(utc时间)
+  # 仓库触发工作流
+  #repository_dispatch:
+  # 编辑文件触发开始编译
+  push:
+  # 手动触发工作流
+  workflow_dispatch:
+    inputs:
+      build:
+        description: 'build-subc'
+        required: true
+        default: '自动部署okteto'
+  # 定时触发编译(每天早5点)
   schedule:
-    - cron: '0 2 * * *'
-
-
-# 点☆Star触发开始编译
+     - cron: '0 21 * * *'
+  # 点☆Star触发开始编译
   watch:  
      types: [started]
      
-
 # 任务集
 jobs:
   build:
