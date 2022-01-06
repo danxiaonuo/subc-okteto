@@ -257,7 +257,7 @@ export default {
         },
         backendOptions: [{ value: "https://sub.danxiaonuo.workers.dev/sub?" }],
         remoteConfig: [
-		  {
+          {
             label: "xiaonuo",
             options: [
               {
@@ -272,7 +272,7 @@ export default {
               }
             ]
           },
-		  {
+          {
             label: "ACL4SSR",
             options: [
               {
@@ -493,7 +493,6 @@ export default {
       loading: false,
       customSubUrl: "",
       curtomShortSubUrl: "",
-
       dialogUploadConfigVisible: false,
       uploadConfig: "",
       uploadPassword: "",
