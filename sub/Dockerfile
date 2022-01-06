@@ -80,7 +80,8 @@ WORKDIR /base
 	
 # 安装subconverter
 RUN set -eux \
-    && wget --no-check-certificate -P /base https://github.com/tindy2013/subconverter/releases/latest/download/subconverter_linux64.tar.gz -O /base/subconverter_linux64.tar.gz \
+    && wget --no-check-certificate -P /base https://github.com/tindy2013/subconverter/releases/download/v0.7.0/subconverter_linux64.tar.gz -O /base/subconverter_linux64.tar.gz \
+    # && wget --no-check-certificate -P /base https://github.com/tindy2013/subconverter/releases/latest/download/subconverter_linux64.tar.gz -O /base/subconverter_linux64.tar.gz \
     && tar xzf subconverter_linux64.tar.gz \
     && rm -rf subconverter_linux64.tar.gz \
     && apk del .$BUILD_DEPS
