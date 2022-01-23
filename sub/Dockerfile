@@ -2,12 +2,15 @@
 #     设置公共的变量         #
 #############################
 FROM alpine:latest as base
+
 # 作者描述信息
 MAINTAINER danxiaonuo
 # 时区设置
 ARG TZ=Asia/Shanghai
 ENV TZ=$TZ
-
+# 语言设置
+ARG LANG=C.UTF-8
+ENV LANG=$LANG
 
 # 镜像变量
 ARG DOCKER_IMAGE=danxiaonuo/subconverter
@@ -16,64 +19,60 @@ ARG DOCKER_IMAGE_OS=subconverter
 ENV DOCKER_IMAGE_OS=$DOCKER_IMAGE_OS
 ARG DOCKER_IMAGE_TAG=latest
 ENV DOCKER_IMAGE_TAG=$DOCKER_IMAGE_TAG
-ARG BUILD_DATE
-ENV BUILD_DATE=$BUILD_DATE
-ARG VCS_REF
-ENV VCS_REF=$VCS_REF
-
 
 # ##############################################################################
-
-# ***** 设置变量 *****
-
-# dumb-init
-# https://github.com/Yelp/dumb-init
-ARG DUMBINIT_VERSION=1.2.2
-ENV DUMBINIT_VERSION=$DUMBINIT_VERSION
-
 
 ####################################
 #       构建subconverter            #
 ####################################
 FROM base AS builder
 
-# http://label-schema.org/rc1/
-LABEL maintainer="danxiaonuo <danxiaonuo@danxiaonuo.me>" \
-      org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name="$DOCKER_IMAGE" \
-      org.label-schema.schema-version="1.0" \
-      org.label-schema.url="https://github.com/$DOCKER_IMAGE" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url="https://github.com/$DOCKER_IMAGE" \
-      versions.dumb-init=${DUMBINIT_VERSION}
+# 作者描述信息
+MAINTAINER danxiaonuo
+# 时区设置
+ARG TZ=Asia/Shanghai
+ENV TZ=$TZ
+# 语言设置
+ARG LANG=C.UTF-8
+ENV LANG=$LANG
 
 # 构建安装依赖
-ARG BUILD_DEPS="\
+ARG PKG_DEPS="\
+      zsh \
+      bash \
+      bind-tools \
+      iproute2 \
+      git \
+      vim \
+      tzdata \
+      curl \
       wget \
-      tzdata"
-ENV BUILD_DEPS=$BUILD_DEPS
+      lsof \
+      zip \
+      unzip \
+      ca-certificates"
+ENV PKG_DEPS=$PKG_DEPS
 
-
-# 修改源地址
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-# ***** 安装相关依赖并更新系统软件 *****
 # ***** 安装依赖 *****
-RUN set -eux \
-   # 更新源地址
-   && apk update \
-   # 更新系统并更新系统软件
-   && apk upgrade && apk upgrade \
-   && apk add -U --update --virtual .$BUILD_DEPS \
+RUN set -eux && \
+   # 修改源地址
+   sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
+   # 更新源地址并更新系统软件
+   apk update && apk upgrade && \
+   # 安装依赖包
+   apk add --no-cache --clean-protected $PKG_DEPS && \
+   rm -rf /var/cache/apk/* && \
    # 更新时区
-   && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
+   ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
    # 更新时间
+   echo ${TZ} > /etc/timezone && \
+   # 更改为zsh
+   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || true && \
+   sed -i -e "s/bin\/ash/bin\/zsh/" /etc/passwd && \
+   sed -i -e 's/mouse=/mouse-=/g' /usr/share/vim/vim*/defaults.vim && \
+   /bin/zsh
    && echo ${TZ} > /etc/timezone
 # ##############################################################################
-
-# 安装dumb-init
-RUN set -eux \
-    && wget --no-check-certificate https://github.com/Yelp/dumb-init/releases/download/v${DUMBINIT_VERSION}/dumb-init_${DUMBINIT_VERSION}_x86_64 -O /usr/bin/dumb-init \
-    && chmod +x /usr/bin/dumb-init
 
 # 工作目录
 WORKDIR /base
@@ -83,15 +82,10 @@ RUN set -eux \
     && wget --no-check-certificate -P /base https://github.com/tindy2013/subconverter/releases/download/v0.7.0/subconverter_linux64.tar.gz -O /base/subconverter_linux64.tar.gz \
     # && wget --no-check-certificate -P /base https://github.com/tindy2013/subconverter/releases/latest/download/subconverter_linux64.tar.gz -O /base/subconverter_linux64.tar.gz \
     && tar xzf subconverter_linux64.tar.gz \
-    && rm -rf subconverter_linux64.tar.gz \
-    && apk del .$BUILD_DEPS
+    && rm -rf subconverter_linux64.tar.gz
 	
-
 # 容器信号处理
 STOPSIGNAL SIGQUIT
-
-# 入口
-ENTRYPOINT ["dumb-init"]
 
 # 启动命令
 CMD ["./subconverter/subconverter"]
